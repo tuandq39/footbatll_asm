@@ -1,0 +1,110 @@
+
+<style>
+    body {
+        margin: 0;
+	    background: linear-gradient(45deg, #49a09d, #5f2c82);
+	    font-family: sans-serif;
+	    font-weight: 100;
+    }
+    h1{
+        text-align: center;
+        background: -webkit-linear-gradient(#49a09d, #5f2c82);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    form{
+        margin: 0 auto;
+    }
+
+    .container-form{
+        max-width: 600px;
+	    margin: 100px auto;
+	    background: #fff;
+	    border-radius: 8px;
+	    padding: 20px;
+    }
+    .container-form  textarea{
+        width: 100%;
+	    border: none;
+	    background: #E8E8E8;
+	    padding: 10px 15px;
+	    height: 20%;
+	    border-radius: 5px 5px 0px 0px;
+	    border-bottom: 2px solid #016BA8;
+	    transition: all 0.5s;
+	    margin-top: 15px;
+        margin-bottom: 15px;
+        color: black;
+    }
+
+    .container-form input {
+        width: 100%;
+        border: none;
+        background-color: #E8E8E8;
+        padding: 10px 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .updateBtn {       
+    background: linear-gradient( #49a09d, #5f2c82 );
+    background-size: 200% 100%;
+    border: none;
+	    border-radius: 6px;
+    color: white;
+
+    cursor: pointer;
+    font-size: 16px;
+	font-weight: 670;
+    line-height: 24px;
+    overflow: hidden;
+    padding: 12px 24px;
+    position: relative;
+    text-decoration: none;
+    }
+</style>
+
+<div class="container-form">
+    
+    <form method="post" action="/nations/update/<%= nation._id%>" >
+        <h1>Update <%= nation.name%></h1>
+        <div class="field is-horizontal">
+            <div class="container">
+                <div class="field-label is-normal">
+                <label class="label">Name</label>
+                </div>
+                    <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                        <input class="input is-info" name="name" type="text" placeholder="" value="<%= nation.name%>" required>
+                        </div>
+                    </div>
+                    </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                <label class="label">Description</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                        <textarea  class="input is-info" class="description" name="description" type="text" value=""  ><%= nation.description%></textarea>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                    <button class="updateBtn" type="submit" >
+                        Update
+                    </button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </form>
+</div>

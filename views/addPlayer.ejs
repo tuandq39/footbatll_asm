@@ -1,0 +1,229 @@
+<style>
+    body {
+        margin: 0;
+	background: linear-gradient(45deg, #49a09d, #5f2c82);
+	font-family: sans-serif;
+	font-weight: 100;
+    }
+    .container-form{
+    
+        max-width: 600px;
+        margin: 100px auto;
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+    
+}
+
+.container-form  textarea{
+    width: 100%;
+    border: none;
+    background: #E8E8E8;
+    padding: 10px 15px;
+    height: 20%;
+    border-radius: 5px 5px 0px 0px;
+    border-bottom: 2px solid #016BA8;
+    transition: all 0.5s;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: black;
+}
+
+.update, .delete {
+    text-decoration: none;
+    color: #fff;
+   /* display: block;
+   background: red;
+   width: 50px;
+   */
+}
+
+.buttons{
+    display: flex;
+    justify-content: space-around ;
+}
+
+.action{
+    text-align: center;
+}
+
+.container-form input {
+    width: 100%;
+    border: none;
+    background-color: #E8E8E8;
+    padding: 10px 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.createBtn {       
+    background: linear-gradient( #49a09d, #5f2c82 );
+    background-size: 200% 100%;
+    border: none;
+        border-radius: 6px;
+    color: white;
+
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 670;
+    line-height: 24px;
+    overflow: hidden;
+    padding: 12px 24px;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.controlBtn{
+    display: flex;
+    justify-content: center;
+}
+
+h1{
+    text-align: center;
+    background: -webkit-linear-gradient(#49a09d, #5f2c82);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.field{
+    margin-bottom: 10px;
+}
+
+select {
+    width: 100%;
+    padding: 15px 15px;
+}
+
+.createBtn {       
+    background: linear-gradient( #49a09d, #5f2c82 );
+    background-size: 200% 100%;
+    border: none;
+        border-radius: 6px;
+    color: white;
+
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 670;
+    line-height: 24px;
+    overflow: hidden;
+    padding: 12px 24px;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    margin: 0 auto;
+}
+
+input[type='radio'], .label-radio{   
+    vertical-align: baseline;
+    padding: 10px;
+    margin: 10px;
+ }
+</style>
+
+<div class="container-form">
+    <h1><%= title %></h1>
+
+    <form method="post" action="/players/addPlayer" >
+        <div class="field is-horizontal">
+            <div class="field-label is-normal">
+            <label class="label">Name</label>
+            </div>
+            <div class="field-body">
+            <div class="field">
+                <div class="control">
+                <input class="input is-info" name="name" type="text" placeholder="e.g. Messi" required>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label is-normal">
+            <label class="label">Club</label>
+            </div>
+            <div class="field-body">
+            <div class="field is-narrow">
+                <div class="control">
+                    <input class="input is-info" name="club" type="text" placeholder="" required>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+          <label class="label">Position</label>
+          </div>
+          <div class="field-body">
+          <div class="field is-narrow">
+              <div class="control">
+              <div class="select is-fullwidth">
+                  <select name="position">
+                    <%for (let position of positionList){ %>
+                        <option value="<%= position.id %>"><%= position.name %></option> 
+                    <% } %>
+                  </select>
+              </div>
+              </div>
+          </div>
+          </div>
+      </div>
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+        <label class="label">Goals</label>
+        </div>
+        <div class="field-body">
+        <div class="field is-narrow">
+            <div class="control">
+              <input type="number" name="goals" value="0">
+            </div>
+        </div>
+        </div>
+      </div>
+      
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+        <label class="label">Captain</label>
+        </div>
+        <div class="field-body">
+        <div class="field is-narrow">
+            <div class="control">
+                <div class="select is-fullwidth">
+                    <select name="isCaptain">
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+    
+      
+        <div class="field is-horizontal">
+            <div class="field-label is-normal">
+            <label class="label">Image</label>
+            </div>
+            <div class="field-body">
+            <div class="field">
+                <div class="control">
+                <input class="input is-info" name="image" type="text" placeholder="URL of image" required>
+                </div>
+                
+            </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-body">
+            <div class="field">
+                <div class="control">
+                <button class="createBtn" type="submit" >
+                    Create
+                </button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </form>
+</div>

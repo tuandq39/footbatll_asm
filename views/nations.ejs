@@ -1,0 +1,176 @@
+<style>
+    body {
+        margin: 0;
+	background: linear-gradient(45deg, #49a09d, #5f2c82);
+	font-family: sans-serif;
+	font-weight: 100;
+    }
+    table {
+    margin: 0 auto;
+	width: 800px;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    th {
+            background-color: #55608f !important;
+    }
+
+    th,
+    td {
+        padding: 15px;
+        background-color: rgba(255,255,255,0.2);
+        color: #fff;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    .container{
+        position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    transform: translate(-50%, -50%);
+    }
+
+    .container-form{
+    
+        max-width: 600px;
+	    margin: 160px 150px;
+	    background: #fff;
+	    border-radius: 8px;
+	    padding: 20px;
+        
+    }
+
+    .container-form  textarea{
+        width: 100%;
+	    border: none;
+	    background: #E8E8E8;
+	    padding: 10px 15px;
+	    height: 20%;
+	    border-radius: 5px 5px 0px 0px;
+	    border-bottom: 2px solid #016BA8;
+	    transition: all 0.5s;
+	    margin-top: 15px;
+        margin-bottom: 15px;
+        color: black;
+    }
+
+    .update, .delete {
+        text-decoration: none;
+        color: #fff;
+       /* display: block;
+       background: red;
+       width: 50px;
+       */
+    }
+
+    .buttons{
+        display: flex;
+        justify-content: space-around ;
+    }
+
+    .action{
+        text-align: center;
+    }
+
+    .container-form input {
+        width: 100%;
+        border: none;
+        background-color: #E8E8E8;
+        padding: 10px 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .createBtn {       
+        background: linear-gradient( #49a09d, #5f2c82 );
+        background-size: 200% 100%;
+        border: none;
+            border-radius: 6px;
+        color: white;
+
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 670;
+        line-height: 24px;
+        overflow: hidden;
+        padding: 12px 24px;
+        position: relative;
+        text-decoration: none;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .controlBtn{
+        display: flex;
+        justify-content: center;
+    }
+
+    h1{
+        text-align: center;
+        color: white;
+    }
+
+    .update, .delete {
+        text-decoration: none;
+        color: #5f2c82;
+        padding: 5px;
+        font-size: 20px;
+        font-weight: 600;
+
+    }
+
+    .update:hover,.delete:hover {
+      color: white;
+    }
+
+    .add {
+      text-decoration: none;
+        color: #5f2c82;
+        padding: 5px;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .add:hover {
+      color: white;
+    }
+
+    
+
+
+</style>
+
+<div class="container">
+    <h1><%= title %></h1>
+    <a href="/nations/addNation" class="add">Add a Nation</a>
+    <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th class="action">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+           <% nation.forEach(function(nation){ %>
+            <tr>
+              <td> <%= nation.nationName %> </td>
+              <td> <%= nation.description %> </td>
+              <td><div class="buttons are-small">
+                <a href="/nations/update/<%= nation._id%>" class="update">Edit</a>
+               
+                <a href="/nations/delete/<%= nation._id%>" class="delete"> Delete</a>                
+              </div></td>
+            </tr>
+            <% })%>
+            </tbody>
+    </table>
+</div>
+
+
