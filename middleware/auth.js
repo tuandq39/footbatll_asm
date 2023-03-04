@@ -14,14 +14,14 @@ const requireAuth = (req,res,next) =>{
         jwt.verify(token,"process.env.SECRET_ACCESS_TOKEN",(err,decodedToken)=>{
             if(err) {
                 console.log(err.message);
-                res.redirect('/login');
+                res.redirect('/users/login');
             }else{
                 console.log(decodedToken);
                 next();
             }
         })
     }else {
-        res.redirect('/login')
+        res.redirect('/users/login')
     }
 }
 
@@ -40,6 +40,7 @@ const checkUser = (req,res,next) =>{
                 if(user.isAdmin) {
                     next();
                 } else {
+                    // res.redirect('/users/login')
                     res.status(401).json({message:"You're not an admin"})
                 }
             }

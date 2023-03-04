@@ -26,6 +26,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/usersRouter");
 var nationRouter = require("./routes/nationRouter");
 var playerRouter = require("./routes/playerRouter");
+var adminRouter = require("./routes/adminRouter");
 
 var app = express();
 
@@ -42,7 +43,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/nations", nationRouter);
-app.use("/players",[requireAuth,checkUser], playerRouter);
+app.use("/players",requireAuth, playerRouter);
+app.use("/accounts",[requireAuth,checkUser],adminRouter);
 app.get('*',checkUser)
 
 // catch 404 and forward to error handler

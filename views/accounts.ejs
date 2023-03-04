@@ -1,0 +1,113 @@
+
+<style>
+    body {
+      margin: 0;
+      background: linear-gradient(45deg, #49a09d, #5f2c82);
+  font-family: sans-serif;
+  font-weight: 100;
+  }
+  table {
+  margin: 0 auto;
+  width: 800px;
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  }
+  
+  th {
+          background-color: #55608f !important;
+  }
+  
+  th,
+  td {
+      padding: 15px;
+      background-color: rgba(255,255,255,0.2);
+      color: #fff;
+  }
+  
+  th {
+      text-align: left;
+  }
+  
+  .container{
+      position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .container-form {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .image{
+    display: block;
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+  }
+  .update, .delete {
+      text-decoration: none;
+      color: #5f2c82;
+      padding: 5px;
+      font-size: 20px;
+      font-weight: 600;
+  
+  }
+  
+  .update:hover,.delete:hover {
+    color: white;
+  }
+  
+  .add {
+    text-decoration: none;
+      color: #5f2c82;
+      padding: 5px;
+      font-size: 20px;
+      font-weight: 600;
+  
+  }
+  
+  .add:hover {
+    color: white;
+  }
+  
+  
+  .buttons{
+      display: flex;
+      justify-content: space-around ;
+  }
+  
+  h1{
+    text-align: center;
+      color: white;
+  }
+  </style>
+  
+  <div class="container">
+  <h1><%= title %></h1>
+  <table class="table">
+  
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>name</th>
+        <th>yob</th>
+        <th>isAdmin</th>
+      </tr>
+    </thead>
+    <tbody>
+       <% accounts.forEach(function(account){ %>
+          <td> <%= account.username %> </td>
+          <td> <%= account.name %> </td>
+          <td> <%= account.yob %> </td>
+          <td> <%= account.isAdmin %> </td>
+        </tr>
+        <% })%>
+        </tbody>
+  </table>
+  </div>
+  

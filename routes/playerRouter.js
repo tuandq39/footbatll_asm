@@ -8,7 +8,7 @@ const playerRouter = express.Router();
 playerRouter.use(bodyParser.json());
 
 playerRouter.route('/')
-.get(requireAuth,checkUser,playerController.index)
+.get(playerController.index)
 
 playerRouter.route('/addPlayer')
 .get(playerController.add)
