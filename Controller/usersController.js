@@ -24,14 +24,18 @@ const handleErrors = (err) => {
     errors.password = 'That password is incorrect';
   }
 
-  // duplicate email error
-  if (err.code === 11000) {
-    errors.username = 'that email is already registered';
-    return errors;
+  if (err.message === 'duplicate username') {
+    errors.username = 'That username is already registered!';
   }
 
+  // duplicate email error
+  // if (err.code === 11000) {
+  //   errors.username = 'that email is already registered';
+  //   return errors;
+  // }
+
   // validation errors
-  if (err.message.includes('user validation failed')) {
+  if (err.message.includes("user validation failed")) {
     // console.log(err);
     Object.values(err.errors).forEach(({ properties }) => {
       // console.log(val);
@@ -51,12 +55,13 @@ class UsersController {
     res.render("login");
   }
   signup(req, res, next) {
-    try {
+
       Users.findOne({ username: req.body.username }).then((user) => {
         if (user != null) {
-          var err = new Error("User " + req.body.username + " already exists!");
-          err.status = 403;
-          next(err);
+          // var err = new Error("User " + req.body.username + " already exists!");
+          // err.status = 403;
+          // next(err);
+          throw Error("duplicate username")
         } else {
           const user = new Users({
             username: req.body.username,
@@ -73,20 +78,20 @@ class UsersController {
                 httpOnly: true,
                 maxAge: MaxAge * 1000,
               });
-              // res.status(201).json({ user: user._id });
-              res.redirect("/");
+              res.status(201).json({ user: user._id });
+              // res.redirect("/");
             })
-            .catch((err) => {
-              const erros = handleErrors(err);
-              res.status(500).json("Error: " + err);
-            });
+            // .catch((err) => {
+            //   const erros = handleErrors(err);
+            //   res.status(500).json("Error: " + err);
+            // });
         }
-      });
-    } catch(err) {
-      const errors = handleErrors(err);
-      res.status(400).json({errors})
+      }).catch((err) => {
+        const errors = handleErrors(err);
+        res.status(400).json({errors})
+      })
     }
-  }
+  
   login(req, res, next) {
     const { username, password } = { ...req.body };
     Users.findOne({ username: username })
@@ -111,13 +116,27 @@ class UsersController {
             httpOnly: true,
             maxAge: MaxAge * 1000,
           });
-          res.redirect("/players");
+          res.status(200).json({user:"Login sucessfully"})
+          // res.redirect("/players");
         }
       })
       .catch((err) => {
         const errors = handleErrors(err);
         res.status(400).json({errors})
       });
+    
+    // const { username, password } = req.body;
+
+    // try {
+    //   const user = await Users.login(username, password);
+    //   const token = createToken(user._id);
+    //   res.cookie("jwt", token, { httpOnly: true, maxAge: MaxAge * 1000 });
+    //   res.status(200).json({ user: user._id });
+    //   res.redirect('/players')
+    // } catch (err) {
+    //   const errors = handleErrors(err);
+    //   res.status(400).json({ errors });
+    // }
   }
 
   logout(req, res, next) {

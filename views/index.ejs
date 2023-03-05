@@ -101,15 +101,19 @@ h1{
   </thead>
   <tbody>
      <% players.forEach(function(player){ %>
-      <tr>
-        <td>
-          <img class="image" src=<%= player.image %> >
-        
-      </td>
-        <td> <%= player.name %> </td>
-        <td> <%= player.isCaptain %> </td>
-        <td> <%= player.nationName %> </td>
-      </tr>
+      <% if(player.isAdmin) { %>
+        <tr>
+          <td>
+            <img class="image" src=<%= player.image %> >
+          </td>
+          <td> <%= player.name %> </td>
+          <td> <%= player.isCaptain %> </td>
+          <td> <%= player.nationName %> </td>
+        </tr>
+      <%} else {%>
+
+      <%} %>
+      
       <% })%>
       </tbody>
 </table>

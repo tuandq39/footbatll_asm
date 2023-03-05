@@ -40,7 +40,7 @@ const checkUser = (req,res,next) =>{
                 if(user.isAdmin) {
                     next();
                 } else {
-                    // res.redirect('/users/login')
+                    res.redirect('/users/login')
                     res.status(401).json({message:"You're not an admin"})
                 }
             }
