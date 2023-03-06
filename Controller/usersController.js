@@ -35,14 +35,14 @@ const handleErrors = (err) => {
   // }
 
   // validation errors
-  if (err.message.includes("user validation failed")) {
-    // console.log(err);
-    Object.values(err.errors).forEach(({ properties }) => {
-      // console.log(val);
-      // console.log(properties);
-      errors[properties.path] = properties.message;
-    });
-  }
+  // if (err.message.includes("user validation failed")) {
+  //   // console.log(err);
+  //   Object.values(err.errors).forEach(({ properties }) => {
+  //     // console.log(val);
+  //     // console.log(properties);
+  //     errors[properties.path] = properties.message;
+  //   });
+  // }
 
   return errors;
 }
@@ -55,6 +55,7 @@ class UsersController {
     res.render("login");
   }
   signup(req, res, next) {
+    console.log(req.body.username);
 
       Users.findOne({ username: req.body.username }).then((user) => {
         if (user != null) {
@@ -63,6 +64,7 @@ class UsersController {
           // next(err);
           throw Error("duplicate username")
         } else {
+          console.log(req.body);
           const user = new Users({
             username: req.body.username,
             password: req.body.password,
@@ -116,7 +118,8 @@ class UsersController {
             httpOnly: true,
             maxAge: MaxAge * 1000,
           });
-          res.status(200).json({user:"Login sucessfully"})
+          console.log(user);
+          res.status(200).json({user:user._id})
           // res.redirect("/players");
         }
       })
@@ -142,6 +145,55 @@ class UsersController {
   logout(req, res, next) {
     res.cookie("jwt", "", { maxAge: 1 });
     res.redirect("/");
+  }
+
+  formUpdate(req,res,next){
+    const token = req.cookies.jwt;
+    if(token) {
+      jwt.verify(token,"process.env.SECRET_ACCESS_TOKEN",async (err,decodedToken) =>{
+        if(err){
+
+        }else{
+          let user = await Users.findById(decodedToken.id)
+          .then(user=>{
+            res.render('updateUserInfo',{
+              user:user
+            })
+          })
+        }
+      })
+    }
+    // console.log(req);
+    // const user=  Users.findById(req.id)
+    // .then((user) => {
+    //   res.render('updateUserInfo',{
+    //     user:user
+    //   })
+    // })
+
+  }
+
+  updateUsersInfo(req,res,next) {
+    const token = req.cookies.jwt;
+    if(token) {
+      jwt.verify(token,"process.env.SECRET_ACCESS_TOKEN",async (err,decodedToken) =>{
+        if(err){
+
+        }else{
+          Users.updateOne({_id:decodedToken.id},req.body)
+          .then(() =>{
+            res.redirect('/')
+          })
+          .catch(next)
+          
+        }
+      })
+    }
+    const username = req.body.username;
+    Users.updateOne({username:username},req.body)
+    .then(() =>{
+      res.redirect('/');
+    }).catch(next);
   }
 }
 

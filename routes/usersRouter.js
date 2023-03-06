@@ -11,6 +11,7 @@ const userController = require('../Controller/usersController');
 const usersRouter = express.Router();
 
 usersRouter.use(bodyParser.json());
+usersRouter.use(bodyParser.urlencoded({extended:false}))
 
 usersRouter.route('/')
 .get(userController.index_signup);
@@ -26,6 +27,11 @@ usersRouter.route('/login')
 
 usersRouter.route('/logout')
 .get(userController.logout)
+
+// usersRouter.route('/update')
+// .get(userController.formUpdate)
+// .post(userController.updateUsersInfo)
+
 /* GET users listing. */
 // router.get('/', function(req, res, next) {
 //   res.send('respond with a resource');

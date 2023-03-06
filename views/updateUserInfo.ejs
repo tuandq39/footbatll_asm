@@ -159,71 +159,30 @@
 
 <div class="wrapper">
     <div class="title">Sign up Form</div>
-    <form method="post" action="/users/signup">
+    <form method="post" action="/users/update">
         <div class="field">
-            <input type="text" name="username" required>
+            <input type="text" name="username" value="<%= user.username  %>" required>
             <label>Username</label>
         </div>
         <div class="username error"></div>
         <div class="field">
-            <input type="password" required name="password">
+            <input type="password" name="password" required>
             <label>Password</label>
         </div>
         <div class="field">
-            <input type="text" required name="name">
+            <input type="text" name="name" value="<%= user.name  %>" required>
             <label>Name</label>
         </div>
         <div class="field">
-            <input type="number"  required name="yob">
+            <input type="number" name="yob" value="<%= user.yob  %>" required>
             <label>Birth year</label>
         </div>
         <div class="field">
-            <input type="submit" value="Sign up">
+            <input type="submit" value="Update">
         </div>
-        <div class="signup-link">Already a member? <a href="/users/login">Login now</a></div>
     </form>
 </div>
 
 <script>
-    const form = document.querySelector('form');
 
-    // let myForm = document.getElementById('myForm');
-formData = new FormData(form);
-
-for (let [key, value] of formData.entries()) { 
-  console.log(key, value);
-}
-
-  const usernameError = document.querySelector('.username.error');
-//   const passwordError = document.querySelector('.password.error');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    // reset errors
-    usernameError.textContent = '';
-    // passwordError.textContent = '';
-    // get values
-    const username = form.username.value;
-    const password = form.password.value;
-    const name = form.name.value;
-    const yob = form.yob.value
-    try {
-      const res = await fetch('/users/signup', { 
-        method: 'POST', 
-        body: JSON.stringify({ username, password,name,yob }),
-        headers: {'Content-Type': 'application/json'}
-      });
-      const data = await res.json();
-      console.log(data);
-      if (data.errors) {
-        usernameError.textContent = data.errors.username;
-        // passwordError.textContent = data.errors.password;
-      }
-      if (data.user) {
-        location.assign('/');
-      }
-    }
-    catch (err) {
-      console.log(err);
-    }
-  });
 </script>

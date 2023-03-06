@@ -17,6 +17,7 @@ const requireAuth = (req,res,next) =>{
                 res.redirect('/users/login');
             }else{
                 console.log(decodedToken);
+                res.redirect
                 next();
             }
         })

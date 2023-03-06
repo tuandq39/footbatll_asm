@@ -9,19 +9,19 @@ const Schema = mongoose.Schema;
 const usersSchema = new Schema({
     username: {
         type: String,
-        required: true,
+        required: [true,'Please enter username'],
     },
     password: {
         type: String,
-        required: true
+        required: [true, 'Please enter password']
     },
     name: {
         type: String,
-        required: true,
+        required: [true, 'Please enter name'],
     },
     yob:{
         type: Number,
-        required: true,
+        required: [true, 'Please enter year of birth'],
     },
     isAdmin: {
         type: Boolean,
@@ -31,7 +31,9 @@ const usersSchema = new Schema({
     timestamps: true
 });
 
-usersSchema.pre('save',async function(next){
+usersSchema.set('validateBeforeSave',false);
+
+usersSchema.pre('save', async function(next){
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);
     next();
