@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const Nations = require("./models/nation");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken")
-const {requireAuth,checkUser} = require("./middleware/auth")
+const {requireAuth,checkUser,verifyAdmin} = require("./middleware/auth")
 const url = "mongodb://127.0.0.1:27017/football";
 const connect = mongoose.connect(url);
 
@@ -36,6 +36,7 @@ app.set("view engine", "ejs");
 
 
 
+
 // parse application/json
 app.use(bodyParser.json())
 app.use(logger("dev"));
@@ -44,12 +45,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/nations", nationRouter);
-app.use("/players",requireAuth, playerRouter);
-app.use("/accounts",[requireAuth,checkUser],adminRouter);
-app.get('*',checkUser)
+app.use("/",checkUser, indexRouter);
+app.use("/users",checkUser, usersRouter);
+app.use("/nations",[requireAuth,checkUser,verifyAdmin], nationRouter);
+app.use("/players",[requireAuth,checkUser,verifyAdmin], playerRouter);
+app.use("/accounts",[requireAuth,checkUser,verifyAdmin],adminRouter);
+
+// app.use(checkUser)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

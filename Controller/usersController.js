@@ -55,7 +55,7 @@ class UsersController {
     res.render("login");
   }
   signup(req, res, next) {
-    console.log(req.body.username);
+    // console.log(req.body.username);
 
       Users.findOne({ username: req.body.username }).then((user) => {
         if (user != null) {
@@ -64,7 +64,7 @@ class UsersController {
           // next(err);
           throw Error("duplicate username")
         } else {
-          console.log(req.body);
+          // console.log(req.body);
           const user = new Users({
             username: req.body.username,
             password: req.body.password,
@@ -118,7 +118,7 @@ class UsersController {
             httpOnly: true,
             maxAge: MaxAge * 1000,
           });
-          console.log(user);
+          // console.log(user);
           res.status(200).json({user:user._id})
           // res.redirect("/players");
         }

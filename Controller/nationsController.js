@@ -23,7 +23,7 @@ class NationsController{
         // .then(() => res.redirect('/nations'))
         // .catch(error =>{});
         const nation = new Nations({
-            name:req.body.name,
+            nationName:req.body.nationName,
             description:req.body.description
         })
         nation.save(nation)

@@ -39,7 +39,7 @@ class PlayerController {
       .save(player)
       .then(() => res.redirect("/players"))
       .catch((err) => {
-        res.status(500).json("Error: " + err);
+        // res.status(500).json("Error: " + err);
       });
   }
   delete(req, res, next) {
