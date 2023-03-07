@@ -59,11 +59,12 @@ const verifyAdmin = (req,res,next) =>{
                 let user = await Users.findById(decodedToken.id);
                 res.locals.user = user;
                 if(user.isAdmin) {
+                    // res.redirect('/accounts')
                     next();
                 } else {
+
                     // res.status(401).json({message:"You're not an admin"})
                     // res.redirect('/users/login')
-
                     next()
                 }
             }

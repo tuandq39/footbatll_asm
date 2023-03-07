@@ -28,9 +28,9 @@ usersRouter.route('/login')
 usersRouter.route('/logout')
 .get(userController.logout)
 
-// usersRouter.route('/update')
-// .get(userController.formUpdate)
-// .post(userController.updateUsersInfo)
+usersRouter.route('/update')
+.get(userController.formUpdate)
+.post(userController.updateUsersInfo)
 
 /* GET users listing. */
 // router.get('/', function(req, res, next) {

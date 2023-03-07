@@ -11,8 +11,7 @@ router.get("/" ,function (req, res, next) {
     .populate("nation")
     .then((player) => {
       res.render("index", {
-        title: "Express",
-
+        title: "Player list",
         players: player,
       });
     });

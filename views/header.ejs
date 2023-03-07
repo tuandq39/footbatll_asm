@@ -42,6 +42,7 @@ nav li a{
     <ul>
       <% if (user) { %>
         <li>Welcome, <%= user.username %></li>
+        <li><a href="/users/update">UPDATE INFO</a></li>
         <li><a href="/users/logout">Log out</a></li>
       <% } else { %>
         <li><a href="/users/login">Log in</a></li>

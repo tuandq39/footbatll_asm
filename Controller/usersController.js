@@ -173,14 +173,23 @@ class UsersController {
 
   }
 
-  updateUsersInfo(req,res,next) {
+  async updateUsersInfo(req,res,next) {
+    const salt = await bcrypt.genSalt();
+    let {username ,password, name, yob}={...req.body}
+
+    password = await bcrypt.hash(password,salt);
     const token = req.cookies.jwt;
     if(token) {
       jwt.verify(token,"process.env.SECRET_ACCESS_TOKEN",async (err,decodedToken) =>{
         if(err){
 
         }else{
-          Users.updateOne({_id:decodedToken.id},req.body)
+          Users.updateOne({_id:decodedToken.id},{
+            username: username,
+            password: password,
+            name: name,
+            yob: yob
+          })
           .then(() =>{
             res.redirect('/')
           })
@@ -189,11 +198,11 @@ class UsersController {
         }
       })
     }
-    const username = req.body.username;
-    Users.updateOne({username:username},req.body)
-    .then(() =>{
-      res.redirect('/');
-    }).catch(next);
+
+    // Users.updateOne({username:username},req.body)
+    // .then(() =>{
+    //   res.redirect('/');
+    // }).catch(next);
   }
 }
 

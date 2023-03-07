@@ -57,12 +57,12 @@ const playerSchema = new Schema({
     },
     isCaptain:{
         type: String,
-        default:false,
+        default:"No",
         required:true
     },
     nation:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'nations'
+        ref: 'Nations'
     }
     
 },{

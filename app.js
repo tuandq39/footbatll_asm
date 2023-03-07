@@ -34,9 +34,6 @@ var app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-
-
-
 // parse application/json
 app.use(bodyParser.json())
 app.use(logger("dev"));

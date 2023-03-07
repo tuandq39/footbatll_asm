@@ -1,121 +1,132 @@
-
 <style>
   body {
     margin: 0;
     background: linear-gradient(45deg, #49a09d, #5f2c82);
-font-family: sans-serif;
-font-weight: 100;
-}
-table {
-margin: 0 auto;
-width: 800px;
-border-collapse: collapse;
-overflow: hidden;
-box-shadow: 0 0 20px rgba(0,0,0,0.1);
-}
+    font-family: sans-serif;
+    font-weight: 100;
+  }
 
-th {
-        background-color: #55608f !important;
-}
+  table {
+    margin: 0 auto;
+    width: 800px;
+    border-collapse: collapse;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
 
-th,
-td {
+  th {
+    background-color: #55608f !important;
+  }
+
+  th,
+  td {
     padding: 15px;
-    background-color: rgba(255,255,255,0.2);
+    background-color: rgba(255, 255, 255, 0.2);
     color: #fff;
-}
+  }
 
-th {
+  th {
     text-align: left;
-}
+  }
 
-.container{
+  .container {
+    /* position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+  }
+
+  .container-form {
     position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+    top: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+  }
 
-.container-form {
-  position: absolute;
-  top: 50%;
-  right: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.image{
-  display: block;
+  .image {
+    display: block;
     width: 150px;
     height: 150px;
     object-fit: cover;
-}
-.update, .delete {
+  }
+
+  .update,
+  .delete {
     text-decoration: none;
     color: #5f2c82;
     padding: 5px;
     font-size: 20px;
     font-weight: 600;
 
-}
+  }
 
-.update:hover,.delete:hover {
-  color: white;
-}
+  .update:hover,
+  .delete:hover {
+    color: white;
+  }
 
-.add {
-  text-decoration: none;
+  .add {
+    text-decoration: none;
     color: #5f2c82;
     padding: 5px;
     font-size: 20px;
     font-weight: 600;
 
-}
+  }
 
-.add:hover {
-  color: white;
-}
-
-
-.buttons{
-    display: flex;
-    justify-content: space-around ;
-}
-
-h1{
-  text-align: center;
+  .add:hover {
     color: white;
-}
+  }
+
+
+  .buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  h1 {
+    text-align: center;
+    color: white;
+  }
 </style>
 
 <%- include('header'); -%>
-<div class="container">
-<h1><%= title %></h1>
-<table class="table">
+  <div class="container">
+    <h1>
+      <%= title %>
+    </h1>
+    <table class="table">
 
-  <thead>
-    <tr>
-      <th>Image</th>
-      <th>Name</th>
-      <th>Captain</th>
-      <th>Nations</th>
-    </tr>
-  </thead>
-  <tbody>
-     <% players.forEach(function(player){ %>
-      <% if(player.isAdmin) { %>
+      <thead>
         <tr>
-          <td>
-            <img class="image" src=<%= player.image %> >
-          </td>
-          <td> <%= player.name %> </td>
-          <td> <%= player.isCaptain %> </td>
-          <td> <%= player.nationName %> </td>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Captain</th>
+          <th>Nations</th>
         </tr>
-      <%} else {%>
+      </thead>
+      <tbody>
+        <% players.forEach(function(player){ %>
+          
+            <tr>
+              <td>
+                <img class="image" src=<%=player.image %> >
+              </td>
+              <td>
+                <%= player.name %>
+              </td>
+              <td>
+                <%= player.isCaptain %>
+              </td>
+              <td>
+                <%= player.nationName %>
+              </td>
+            </tr>
+           
 
-      <%} %>
-      
-      <% })%>
+              
+
+                <% })%>
       </tbody>
-</table>
-</div>
+    </table>
+  </div>
