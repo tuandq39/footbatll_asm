@@ -95,25 +95,39 @@
     <h1>
       <%= title %>
     </h1>
-    <table class="table">
 
-      <thead>
-        <tr>
-          <th>Image</th>
-          <th>Name</th>
-          <th>Captain</th>
-          <th>Nations</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% players.forEach(function(player){ %>
-          
+    <% if(user !=null) { %>
+      <table class="table">
+
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Club</th>
+            <th>Position</th>
+            <th>Goals</th>
+            <th>Captain</th>
+            <th>Nations</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% players.forEach(function(player){ %>
             <tr>
               <td>
                 <img class="image" src=<%=player.image %> >
+
               </td>
               <td>
                 <%= player.name %>
+              </td>
+              <td>
+                <%= player.club %>
+              </td>
+              <td>
+                <%= player.position %>
+              </td>
+              <td>
+                <%= player.goals %>
               </td>
               <td>
                 <%= player.isCaptain %>
@@ -122,11 +136,45 @@
                 <%= player.nationName %>
               </td>
             </tr>
-           
+            <% })%>
+        </tbody>
+      </table>
 
-              
+      <% } else { %>
+        <table class="table">
 
-                <% })%>
-      </tbody>
-    </table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Captain</th>
+              <th>Nations</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% players.forEach(function(player){ %>
+
+              <tr>
+                <td>
+                  <img class="image" src=<%=player.image %> >
+                </td>
+                <td>
+                  <%= player.name %>
+                </td>
+                <td>
+                  <%= player.isCaptain %>
+                </td>
+                <td>
+                  <%= player.nationName %>
+                </td>
+              </tr>
+
+              <% })%>
+          </tbody>
+        </table>
+        <% } %>
+
+
+
+
   </div>
