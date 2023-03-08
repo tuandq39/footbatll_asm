@@ -64,7 +64,7 @@ const verifyAdmin = (req,res,next) =>{
                 } else {
 
                     // res.status(401).json({message:"You're not an admin"})
-                    // res.redirect('/users/login')
+                    res.redirect('/error')
                     next()
                 }
             }

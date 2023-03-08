@@ -43,10 +43,15 @@ nav li a{
       <% if (user) { %>
         <li>Welcome, <%= user.username %></li>
         <li><a href="/users/update">UPDATE INFO</a></li>
+        <% if (user.isAdmin) { %>
+          <li><a href="/accounts">Accounts</a></li>
+        <% } %>
         <li><a href="/users/logout">Log out</a></li>
       <% } else { %>
         <li><a href="/users/login">Log in</a></li>
         <li><a href="/users/signup" class="btn">Sign up</a></li>
       <% } %>
+
+      
     </ul>
   </nav>

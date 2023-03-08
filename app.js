@@ -41,12 +41,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use('/public/images',express.static('/public/images'))
 
 app.use("/",checkUser, indexRouter);
 app.use("/users",checkUser, usersRouter);
 app.use("/nations",[requireAuth,checkUser,verifyAdmin], nationRouter);
 app.use("/players",[requireAuth,checkUser,verifyAdmin], playerRouter);
 app.use("/accounts",[requireAuth,checkUser,verifyAdmin],adminRouter);
+app.use("/error" ,(req,res) => res.render('notAdmin',{
+  message:"You don't have permision to enter this site"
+}))
 
 // app.use(checkUser)
 
