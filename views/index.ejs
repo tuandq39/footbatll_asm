@@ -133,7 +133,7 @@
                 <%= player.isCaptain %>
               </td>
               <td>
-                <%= player.nationName %>
+                <%= player.nation %>
               </td>
             </tr>
             <% })%>
@@ -154,21 +154,24 @@
           <tbody>
             <% players.forEach(function(player){ %>
 
-              <tr>
-                <td>
-                  <img class="image" src=<%=player.image %> >
-                </td>
-                <td>
-                  <%= player.name %>
-                </td>
-                <td>
-                  <%= player.isCaptain %>
-                </td>
-                <td>
-                  <%= player.nationName %>
-                </td>
-              </tr>
-
+              <% if(player.isCaptain == "Yes") { %>
+                <tr>
+                  <td>
+                    <img class="image" src=<%=player.image %> >
+                  </td>
+                  <td>
+                    <%= player.name %>
+                  </td>
+                  <td>
+                    <%= player.isCaptain %>
+                  </td>
+                  <td>
+                    <%= player.nation%>
+                  </td>
+                </tr>
+                <% } else { %>
+      
+                  <% } %>
               <% })%>
           </tbody>
         </table>

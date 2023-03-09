@@ -62,7 +62,7 @@ const playerSchema = new Schema({
     },
     nation:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Nations'
+        ref: 'nations'
     }
     
 },{
