@@ -70,44 +70,74 @@ class UsersController {
       res.render("login");
     }
   }
-  signup(req, res, next) {
-    // console.log(req.body.username);
-
-    Users.findOne({ username: req.body.username })
-      .then((user) => {
-        if (user != null) {
-          // var err = new Error("User " + req.body.username + " already exists!");
-          // err.status = 403;
-          // next(err);
-          throw Error("duplicate username");
-        } else {
-          // console.log(req.body);
-          const user = new Users({
-            username: req.body.username,
-            password: req.body.password,
-            name: req.body.name,
-            yob: req.body.yob,
-          });
-
-          user.save(user).then(() => {
-            const token = createToken(user._id);
+  async signup(req, res, next) {
+    const {username,name,yob} = req.body
+    let password = req.body.password
+    try {
+      const user = await Users.findOne({ username: username });
+      if (user != null) {
+        throw Error("duplicate username");
+      } else {
+        const salt = await bcrypt.genSalt(10);
+        password = password.toString();
+        password = await bcrypt.hash(password, salt);
+        const newUser = new Users({
+          username:username,
+          password: password,
+          name:name,
+          yob:yob
+        })
+        newUser.save(newUser).then(()=>{
+          const token = createToken(newUser._id);
             res.cookie("jwt", token, {
               httpOnly: true,
               maxAge: MaxAge * 1000,
             });
-            res.status(201).json({ user: user._id });
-            // res.redirect("/");
-          });
-          // .catch((err) => {
-          //   const erros = handleErrors(err);
-          //   res.status(500).json("Error: " + err);
-          // });
-        }
-      })
-      .catch((err) => {
-        const errors = handleErrors(err);
-        res.status(400).json({ errors });
-      });
+            res.status(201).json({ user: newUser._id });
+        })
+        
+      }
+    } catch (error) {
+      const errors = handleErrors(error);
+      res.status(400).json({ errors });
+    }
+    
+
+    // Users.findOne({ username: req.body.username })
+    //   .then((user) => {
+    //     if (user != null) {
+    //       // var err = new Error("User " + req.body.username + " already exists!");
+    //       // err.status = 403;
+    //       // next(err);
+    //       throw Error("duplicate username");
+    //     } else {
+    //       // console.log(req.body);
+    //       const user = new Users({
+    //         username: req.body.username,
+    //         password: req.body.password,
+    //         name: req.body.name,
+    //         yob: req.body.yob,
+    //       });
+
+    //       user.save(user).then(() => {
+    //         const token = createToken(user._id);
+    //         res.cookie("jwt", token, {
+    //           httpOnly: true,
+    //           maxAge: MaxAge * 1000,
+    //         });
+    //         res.status(201).json({ user: user._id });
+    //         // res.redirect("/");
+    //       });
+    //       // .catch((err) => {
+    //       //   const erros = handleErrors(err);
+    //       //   res.status(500).json("Error: " + err);
+    //       // });
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     const errors = handleErrors(err);
+    //     res.status(400).json({ errors });
+    //   });
   }
 
   login(req, res, next) {
