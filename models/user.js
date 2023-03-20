@@ -27,17 +27,20 @@ const usersSchema = new Schema({
         type: Boolean,
         default: false
     }, 
+    resetToken: String,
+    resetTokenExpiration: Date,
+
 },{
     timestamps: true
 });
 
 usersSchema.set('validateBeforeSave',false);
 
-usersSchema.pre('save', async function(next){
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-})
+// usersSchema.pre('save', async function(next){
+//     const salt = await bcrypt.genSalt();
+//     this.password = await bcrypt.hash(this.password, salt);
+//     next();
+// })
 
 // usersSchema.statics.login = async function(username, password) {
 //     const user = await this.findOne({ username });

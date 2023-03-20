@@ -1,7 +1,12 @@
 const Users = require("../models/user");
+const Otp = require("../models/otp");
 var session = require("express-session");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const {insertOtp, validOtp} = require("../services/otp.service")
+const otpGenerator = require('otp-generator');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer')
 
 const MaxAge = 3 * 34 * 60 * 60;
 const createToken = (id) => {
@@ -13,6 +18,7 @@ const createToken = (id) => {
 const handleErrors = (err) => {
   console.log(err.message, err.code);
   let errors = { username: '', password: '' };
+
 
   // incorrect email
   if (err.message === 'incorrect username') {
@@ -49,20 +55,31 @@ const handleErrors = (err) => {
 
 class UsersController {
   index_signup(req, res, next) {
-    res.render("signup");
+    const token = req.cookies.jwt;
+    if (token) {
+      res.redirect("/");
+    } else {
+      res.render("signup");
+    }
   }
   index_login(req, res, next) {
-    res.render("login");
+    const token = req.cookies.jwt;
+    if (token) {
+      res.redirect("/");
+    } else {
+      res.render("login");
+    }
   }
   signup(req, res, next) {
     // console.log(req.body.username);
 
-      Users.findOne({ username: req.body.username }).then((user) => {
+    Users.findOne({ username: req.body.username })
+      .then((user) => {
         if (user != null) {
           // var err = new Error("User " + req.body.username + " already exists!");
           // err.status = 403;
           // next(err);
-          throw Error("duplicate username")
+          throw Error("duplicate username");
         } else {
           // console.log(req.body);
           const user = new Users({
@@ -72,28 +89,27 @@ class UsersController {
             yob: req.body.yob,
           });
 
-          user
-            .save(user)
-            .then(() => {
-              const token = createToken(user._id);
-              res.cookie("jwt", token, {
-                httpOnly: true,
-                maxAge: MaxAge * 1000,
-              });
-              res.status(201).json({ user: user._id });
-              // res.redirect("/");
-            })
-            // .catch((err) => {
-            //   const erros = handleErrors(err);
-            //   res.status(500).json("Error: " + err);
-            // });
+          user.save(user).then(() => {
+            const token = createToken(user._id);
+            res.cookie("jwt", token, {
+              httpOnly: true,
+              maxAge: MaxAge * 1000,
+            });
+            res.status(201).json({ user: user._id });
+            // res.redirect("/");
+          });
+          // .catch((err) => {
+          //   const erros = handleErrors(err);
+          //   res.status(500).json("Error: " + err);
+          // });
         }
-      }).catch((err) => {
-        const errors = handleErrors(err);
-        res.status(400).json({errors})
       })
-    }
-  
+      .catch((err) => {
+        const errors = handleErrors(err);
+        res.status(400).json({ errors });
+      });
+  }
+
   login(req, res, next) {
     const { username, password } = { ...req.body };
     Users.findOne({ username: username })
@@ -105,7 +121,9 @@ class UsersController {
           throw Error("incorrect username");
         } else if (!(await bcrypt.compare(password, user.password))) {
           // var err = new Error("Your password is incorrect!");
-          throw Error('incorrect password');
+          console.log(password);
+          console.log(user.password);
+          throw Error("incorrect password");
           // err.status = 403;
           // return next(err);
         } else if (
@@ -119,15 +137,15 @@ class UsersController {
             maxAge: MaxAge * 1000,
           });
           // console.log(user);
-          res.status(200).json({user:user._id})
+          res.status(200).json({ user: user._id });
           // res.redirect("/players");
         }
       })
       .catch((err) => {
         const errors = handleErrors(err);
-        res.status(400).json({errors})
+        res.status(400).json({ errors });
       });
-    
+
     // const { username, password } = req.body;
 
     // try {
@@ -147,21 +165,25 @@ class UsersController {
     res.redirect("/");
   }
 
-  formUpdate(req,res,next){
+  formUpdate(req, res, next) {
     const token = req.cookies.jwt;
-    if(token) {
-      jwt.verify(token,"process.env.SECRET_ACCESS_TOKEN",async (err,decodedToken) =>{
-        if(err){
-
-        }else{
-          let user = await Users.findById(decodedToken.id)
-          .then(user=>{
-            res.render('updateUserInfo',{
-              user:user
-            })
-          })
+    if (token) {
+      jwt.verify(
+        token,
+        "process.env.SECRET_ACCESS_TOKEN",
+        async (err, decodedToken) => {
+          if (err) {
+          } else {
+            let user = await Users.findById(decodedToken.id).then((user) => {
+              res.render("updateUserInfo", {
+                user: user,
+              });
+            });
+          }
         }
-      })
+      );
+    } else {
+      res.redirect("/");
     }
     // console.log(req);
     // const user=  Users.findById(req.id)
@@ -170,33 +192,37 @@ class UsersController {
     //     user:user
     //   })
     // })
-
   }
 
-  async updateUsersInfo(req,res,next) {
+  async updateUsersInfo(req, res, next) {
     const salt = await bcrypt.genSalt();
-    let {username ,password, name, yob}={...req.body}
+    let { username, password, name, yob } = { ...req.body };
 
-    password = await bcrypt.hash(password,salt);
+    password = await bcrypt.hash(password, salt);
     const token = req.cookies.jwt;
-    if(token) {
-      jwt.verify(token,"process.env.SECRET_ACCESS_TOKEN",async (err,decodedToken) =>{
-        if(err){
-
-        }else{
-          Users.updateOne({_id:decodedToken.id},{
-            username: username,
-            password: password,
-            name: name,
-            yob: yob
-          })
-          .then(() =>{
-            res.redirect('/')
-          })
-          .catch(next)
-          
+    if (token) {
+      jwt.verify(
+        token,
+        "process.env.SECRET_ACCESS_TOKEN",
+        async (err, decodedToken) => {
+          if (err) {
+          } else {
+            Users.updateOne(
+              { _id: decodedToken.id },
+              {
+                username: username,
+                password: password,
+                name: name,
+                yob: yob,
+              }
+            )
+              .then(() => {
+                res.redirect("/");
+              })
+              .catch(next);
+          }
         }
-      })
+      );
     }
 
     // Users.updateOne({username:username},req.body)
@@ -204,6 +230,143 @@ class UsersController {
     //   res.redirect('/');
     // }).catch(next);
   }
+
+  async forgotPassword(req, res, next) {
+    try {
+      const { username } = req.body;
+
+      // Find user by email
+      const user = await Users.findOne({ username });
+      console.log(user);
+      if (!user) {
+        return res.status(400).json({ message: "User not found" });
+      }
+
+      // Generate reset token and expiration time
+      const token = crypto.randomBytes(20).toString("hex");
+      const expiresAt = Date.now() + 3600000; // 1 hour from now
+
+      // Save reset token and expiration time in user document
+      user.resetToken = token;
+      user.resetTokenExpiration  = expiresAt;
+      await user.save();
+      console.log(user);
+
+      // Send password reset email with reset link
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        secure: false,
+        auth: {
+          user: "dqtutest@gmail.com",
+          pass: "pgtabncvpzzikrin",
+        },
+      });
+
+      const resetLink = `http://${req.headers.host}/users/reset-password/${token}`;
+      console.log(resetLink);
+      const mailOptions = {
+        from: "dqtutest@gmail.com",
+        to: username,
+        subject: "Password Reset Request",
+        html: `<p>You have requested to reset your password. Please click <b><a href="${resetLink}">here</a></b> to reset your password.</p>`,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error(error);
+          return res
+            .status(500)
+            .json({ message: "Failed to send reset email" });
+        }
+
+        res.json({ message: "Reset email sent" });
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  async resetPassword(req, res, next) {
+    try {
+      const { token } = req.params;
+      const { newPassword } = req.body;
+
+      // Find user by reset token and check if token is expired
+      const user = await Users.findOne({
+        resetToken: token,
+        resetTokenExpiration : { $gt: Date.now() },
+      });
+      console.log(user);
+      if (!user) {
+        return res.status(400).json({ message: "Invalid or expired token" });
+      }
+
+      // Hash new password and save in user document
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+      user.resetToken = null;
+      user.resetTokenExpiration  = null;
+      await user.save();
+
+      // await user.updateOne({_id:user._id},{
+      //   password: await bcrypt.hash(newPassword, salt),
+      //   resetToken:null,
+      //   resetTokenExpiration:null
+      // });
+
+
+      res.json({ message: "Password reset successful",
+                  newPassword:newPassword,
+                  hashedPassword:user.password, 
+                  isMatch:await bcrypt.compare(newPassword, user.password),
+                  user:user });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  async updatePassword(req,res,next) {
+    const {username,currentPassword,newPassword} = req.body;
+    const user = await Users.findOne({username});
+    if(!(await bcrypt.compare(currentPassword,user.password))) {
+      res.status(400).json({message:"Incorrect password"})
+    } else {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword,salt);
+      await user.save();
+      res.status(200).json({message:"Update successfully"})
+    }
+  }
+
+  updatePasswordForm(req,res,next){
+    const token = req.cookies.jwt;
+    if (token) {
+      jwt.verify(
+        token,
+        "process.env.SECRET_ACCESS_TOKEN",
+        async (err, decodedToken) => {
+          if (err) {
+          } else {
+            let user = await Users.findById(decodedToken.id).then((user) => {
+              res.render("updatePassword", {
+                user: user,
+              });
+            });
+          }
+        }
+      );
+    } else {
+      res.redirect("/");
+    }
+
+  }
+
+  async resetPasswordByOTP(req,res,next) {
+    
+  }
 }
 
+  
 module.exports = new UsersController();

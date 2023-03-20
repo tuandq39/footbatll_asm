@@ -9,7 +9,7 @@ const { requireAuth } = require("../middleware/auth");
 
 router.get("/" ,function (req, res, next) {
   Players.find({})
-    .populate("nation.nationName","nationName")
+    .populate("nation")
     .then((player) => {
       // console.log(player.nation);
       // const na = Nations.find({_id:player.nation})
