@@ -71,8 +71,8 @@ class UsersController {
     }
   }
   async signup(req, res, next) {
-    const {username,name,yob} = req.body
-    let password = req.body.password
+    const { username, name, yob } = req.body;
+    let password = req.body.password;
     try {
       const user = await Users.findOne({ username: username });
       if (user != null) {
@@ -82,26 +82,24 @@ class UsersController {
         password = password.toString();
         password = await bcrypt.hash(password, salt);
         const newUser = new Users({
-          username:username,
+          username: username,
           password: password,
-          name:name,
-          yob:yob
-        })
-        newUser.save(newUser).then(()=>{
+          name: name,
+          yob: yob,
+        });
+        newUser.save(newUser).then(() => {
           const token = createToken(newUser._id);
-            res.cookie("jwt", token, {
-              httpOnly: true,
-              maxAge: MaxAge * 1000,
-            });
-            res.status(201).json({ user: newUser._id });
-        })
-        
+          res.cookie("jwt", token, {
+            httpOnly: true,
+            maxAge: MaxAge * 1000,
+          });
+          res.status(201).json({ user: newUser._id });
+        });
       }
     } catch (error) {
       const errors = handleErrors(error);
       res.status(400).json({ errors });
     }
-    
 
     // Users.findOne({ username: req.body.username })
     //   .then((user) => {
@@ -278,7 +276,7 @@ class UsersController {
 
       // Save reset token and expiration time in user document
       user.resetToken = token;
-      user.resetTokenExpiration  = expiresAt;
+      user.resetTokenExpiration = expiresAt;
       await user.save();
       console.log(user);
 
@@ -325,7 +323,7 @@ class UsersController {
       // Find user by reset token and check if token is expired
       const user = await Users.findOne({
         resetToken: token,
-        resetTokenExpiration : { $gt: Date.now() },
+        resetTokenExpiration: { $gt: Date.now() },
       });
       console.log(user);
       if (!user) {
@@ -336,7 +334,7 @@ class UsersController {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(newPassword, salt);
       user.resetToken = null;
-      user.resetTokenExpiration  = null;
+      user.resetTokenExpiration = null;
       await user.save();
 
       // await user.updateOne({_id:user._id},{
@@ -345,32 +343,39 @@ class UsersController {
       //   resetTokenExpiration:null
       // });
 
-
-      res.json({ message: "Password reset successful",
-                  newPassword:newPassword,
-                  hashedPassword:user.password, 
-                  isMatch:await bcrypt.compare(newPassword, user.password),
-                  user:user });
+      res.json({
+        message: "Password reset successful",
+        newPassword: newPassword,
+        hashedPassword: user.password,
+        isMatch: await bcrypt.compare(newPassword, user.password),
+        user: user,
+      });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Server error" });
     }
   }
 
-  async updatePassword(req,res,next) {
-    const {username,currentPassword,newPassword} = req.body;
-    const user = await Users.findOne({username});
-    if(!(await bcrypt.compare(currentPassword,user.password))) {
-      res.status(400).json({message:"Incorrect password"})
-    } else {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(newPassword,salt);
-      await user.save();
-      res.status(200).json({message:"Update successfully"})
+  async updatePassword(req, res, next) {
+    try {
+      const { username, currentPassword, newPassword } = req.body;
+      const user = await Users.findOne({ username });
+      if (!(await bcrypt.compare(currentPassword, user.password))) {
+        // res.status(400).json({ message: "Incorrect password" });
+        throw Error("incorrect password");
+      } else {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+        await user.save();
+        res.status(200).json({ message: "Update successfully" });
+      }
+    } catch (error) {
+      const errors = handleErrors(error);
+      res.status(400).json({ errors });
     }
   }
 
-  updatePasswordForm(req,res,next){
+  updatePasswordForm(req, res, next) {
     const token = req.cookies.jwt;
     if (token) {
       jwt.verify(
@@ -390,12 +395,9 @@ class UsersController {
     } else {
       res.redirect("/");
     }
-
   }
 
-  async resetPasswordByOTP(req,res,next) {
-    
-  }
+  async resetPasswordByOTP(req, res, next) {}
 }
 
   
